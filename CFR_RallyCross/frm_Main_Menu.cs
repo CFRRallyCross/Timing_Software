@@ -21,11 +21,11 @@ namespace CFR_RallyCross
         public frm_Main_Menu()
         {
             InitializeComponent();
-            
+
 
             if (SQL_Commands.IsServerConnected() == false)
             {
-                MessageBox.Show("SQL Server is not currently online."+Environment.NewLine+"All data will be locally cached until server returns online.");
+                MessageBox.Show("SQL Server is not currently online." + Environment.NewLine + "All data will be locally cached until server returns online.");
                 tslbl_SQLStatus.BackColor = Color.OrangeRed;
             }
             else
@@ -75,6 +75,16 @@ namespace CFR_RallyCross
             tspb_Progress.Maximum = 80;
             try
             {
+                //Update DNF Results
+                SqlConnection SQL = SQL_Commands.Connect();
+                SQL.Open();
+                using (SQL)
+                {
+                    List<Timing_Data> lst_TD = SQL_Commands.Timing.Get.DNF(SQL);
+                    SQL_Commands.Timing.Set.DNF(lst_TD, SQL);
+                }
+                SQL.Close();
+
                 //Export Report to HTML
                 Reports.ExportStages();
                 tspb_Progress.Value = 10;
@@ -111,10 +121,13 @@ namespace CFR_RallyCross
                 DateTime dtFinish = DateTime.Now;
                 TimeSpan tsCompleted = dtFinish - dtStart;
                 Console.WriteLine(tsCompleted);
-            } catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Console.Write(ex.Message);
-            } finally
+            }
+            finally
             {
                 this.Cursor = this.DefaultCursor;
                 tspb_Progress.Value = 0;

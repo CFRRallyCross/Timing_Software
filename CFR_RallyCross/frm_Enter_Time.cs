@@ -61,7 +61,7 @@ namespace CFR_RallyCross
             SQL_Commands.Timing.Controls.Stages_Completed(dgv_Stages_Completed);
 
             //Update Time Datagrid
-            SQL_Commands.Timing.Controls.Stage_Times(dgv_TimeEntry);      
+            SQL_Commands.Timing.Controls.Stage_Times(dgv_TimeEntry);
 
             //Export Query to Wordpress
             Reports.UploadClassResults();
@@ -220,10 +220,12 @@ namespace CFR_RallyCross
 
         private void chk_OffCourse_CheckedChanged(object sender, EventArgs e)
         {
-            if (chk_OffCourse.Checked is true)
+            if (chk_OffCourse.Checked == true)
             {
                 chk_OffCourse.Text = "YES";
-            } else {
+            }
+            else
+            {
                 chk_OffCourse.Text = "NO";
             }
 

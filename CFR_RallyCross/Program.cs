@@ -1700,7 +1700,30 @@ namespace CFR_RallyCross
                     {
                         decimal MaxStage = SQL_Commands.Timing.Get.MaxStage(td, SQL);
                         decimal AdjustedMax = MaxStage + 10;
-                        Console.WriteLine(td.Total_Time + " , " + MaxStage + " , " + AdjustedMax);
+
+                        using (var transaction = SQL.BeginTransaction())
+                        {
+                            try
+                            {
+                                SqlCommand Command = new SqlCommand("UPDATE tbl_Time " +
+                                                                    "SET Registration_ID = @RegID, Stage_Number = @StageNum, Stage_Time = @StageTime, Cones_Hit = @Cones, Gates_Missed = @Gates, Off_Course = @DNF, Total_Time = @Total WHERE Time_ID = @TimeID", SQL, transaction);
+                                Command.Parameters.AddWithValue("@TimeID", td.Time_ID);
+                                Command.Parameters.AddWithValue("@RegID", td.Registration_ID);
+                                Command.Parameters.AddWithValue("@StageNum", td.Stage_Number);
+                                Command.Parameters.AddWithValue("@StageTime", AdjustedMax);
+                                Command.Parameters.AddWithValue("@Cones", td.Cones_Hit);
+                                Command.Parameters.AddWithValue("@Gates", td.Gates_Missed);
+                                Command.Parameters.AddWithValue("@DNF", td.Off_Course);
+                                Command.Parameters.AddWithValue("@Total", AdjustedMax);
+                                Command.ExecuteNonQuery();
+                                transaction.Commit();
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.ToString());
+                                transaction.Rollback();
+                            }
+                        }
                     }
                 }
             }
@@ -2145,6 +2168,7 @@ namespace CFR_RallyCross
                     SQL.Close();
                 }
             }
+
             public static class Get
             {
                 public static int Event(double EventNumber, SqlConnection SQL)
@@ -2257,6 +2281,7 @@ namespace CFR_RallyCross
                     SQL.Close();
                 }
             }
+
             public static class Create
             {
                 public static void Driver(string LastName, string FirstName, string MemberNumber, string Hometown, SqlConnection SQL)
