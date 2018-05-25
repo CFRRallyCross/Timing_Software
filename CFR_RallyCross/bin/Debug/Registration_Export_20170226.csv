@@ -1,0 +1,6 @@
+Class,Number,First Name,Last Name,Year,Make,Model,Checked In,Payment Received,Payment Amount
+MA,41,Michael,Abt,2005,Subaru,WRX STI,True,True,40.0000
+PR,18,Phillip,Barone,1992,Toyota,MR2,True,True,40.0000
+MF,344,Cheryl,Carradini,2005,Volkswagen,Golf GTI,True,True,40.0000
+MF,444,Daniel,Carradini,2005,Volkswagen,Golf GTI,True,True,40.0000
+SR,21,Eric,Chapin,2002,Mazda,Miata,True,True,40.0000
